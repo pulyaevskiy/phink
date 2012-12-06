@@ -1,0 +1,28 @@
+{
+    "name": "pulyaevsky/phink",
+    "description": "Phink is a PHP client for Git VCS.",
+    "keywords": ["git", "vcs"],
+    "homepage": "https://github.com/pulyaevsky/phink",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anatoly Pulyaevsky",
+            "email": "anatoly@abstractionpower.net",
+            "homepage": "https://github.com/pulyaevsky",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "symfony/process": ">=2.1",
+        "symfony/filesystem": ">=2.1"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": {
+            "Phink": "src/",
+            "Phink\\Tests": "tests/"
+        }
+    }
+}
