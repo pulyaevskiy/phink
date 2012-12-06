@@ -34,9 +34,7 @@ class Object
 
     protected function updateFromData($data)
     {
-//        echo "$data\n";
         preg_match('/(\d{6})\s([a-z]*)\s([a-zA-Z0-9]{40})\t(.*)/', $data, $matches);
-//        print_r($matches);
         $this->mode = $matches[1];
         $this->type = $matches[2];
         $this->object = $matches[3];
@@ -55,7 +53,7 @@ class Object
 
     public function getName($absolute = false)
     {
-        return $absolute ? $this->path . DIRECTORY_SEPARATOR . $this->name : $this->name;
+        return $absolute ? $this->path . '/' . $this->name : $this->name;
     }
 
     public function __toString()
