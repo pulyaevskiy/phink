@@ -11,6 +11,8 @@
 
 namespace Phink;
 
+use Symfony\Component\Filesystem\Filesystem;
+
 /**
  * Repository is a wrapper around Git repository.
  *
@@ -47,6 +49,11 @@ class Repository extends AbstractGitExecutor
      */
     public function init()
     {
+        // Do not allow init commands for not existing directories.
+        $fs = new Filesystem();
+        if (!$fs->exists($this->cwd)) {
+            throw new Exception("Directory '{$this->cwd}' doesn't exists.");
+        }
         $this->exec('init');
     }
 

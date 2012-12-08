@@ -20,6 +20,14 @@ class RepositoryTest extends TestCase
     }
 
     /**
+     * @expectedException \Phink\Exception
+     */
+    public function testInitForUnexistedDir()
+    {
+        new Repository(static::$tmpDir .'/somedir', true);
+    }
+
+    /**
      * @depends testInit
      */
     public function testIsDirty($cwd)
