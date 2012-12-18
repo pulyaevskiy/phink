@@ -19,6 +19,26 @@ class RepositoryTest extends TestCase
         return $cwd;
     }
 
+    public function testCloneExisting()
+    {
+        $cwd = static::$tmpDir .'/clonetest';
+        $fs = new Filesystem();
+        $fs->mkdir($cwd);
+        $repo = new Repository($cwd);
+        $repo->cloneExisting('git://github.com/pulyaevsky/phink.git');
+        $this->assertTrue($fs->exists($cwd .'/.git'));
+        return $repo;
+    }
+
+    /**
+     * @depends testCloneExisting
+     * @expectedException \Phink\Exception
+     */
+    public function testCloneInNonEmptyDir(Repository $repo)
+    {
+        $repo->cloneExisting('git://github.com/pulyaevsky/phink.git');
+    }
+
     /**
      * @expectedException \Phink\Exception
      */

@@ -58,17 +58,13 @@ class Repository extends AbstractGitExecutor
     }
 
     /**
-     * Clones existing Git repository.
+     * Clones existing Git repository into current dir.
      *
-     * @param $url
-     * @throws Exception
+     * @param string $url
      */
     public function cloneExisting($url)
     {
-        if (self::exists($this->cwd)) {
-            throw new Exception("Git repository already exists in {$this->cwd}.");
-        }
-        $this->exec("clone $url {$this->cwd}");
+        $this->exec("clone $url ./");
     }
 
     /**
