@@ -1,5 +1,5 @@
 {
-    "name": "pulyaevsky/phink",
+    "name": "phink/phink",
     "description": "Phink is a PHP client for Git VCS.",
     "keywords": ["git", "vcs"],
     "homepage": "https://github.com/pulyaevsky/phink",

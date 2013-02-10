@@ -67,7 +67,7 @@ class ListingTreeTest extends TestCase
             'abc.php' => 'blob',
         );
         reset($expected);
-        
+
         /** @var Object $object */
         foreach ($ls as $object) {
             $this->assertEquals(key($expected), $object->getName());
