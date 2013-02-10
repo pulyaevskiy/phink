@@ -8,19 +8,24 @@ class TestCase extends \PHPUnit_Framework_TestCase
 {
     protected static $tmpDir;
 
+    protected static function generateUniqueString()
+    {
+        return md5(time() . mt_rand());
+    }
+
     public static function setUpBeforeClass()
     {
-        static::$tmpDir = sys_get_temp_dir() . '/phink-' . md5(time() . mt_rand());
+        self::$tmpDir = sys_get_temp_dir() . '/phink-' . self::generateUniqueString();
         $fs = new Filesystem();
-        $fs->mkdir(static::$tmpDir);
-        if (!is_writable(static::$tmpDir)) {
-            static::markTestSkipped('There is no write permission in order to create repositories');
+        $fs->mkdir(self::$tmpDir);
+        if (!is_writable(self::$tmpDir)) {
+            self::markTestSkipped('There is no write permission in order to create repositories');
         }
     }
 
     public static function tearDownAfterClass()
     {
         $fs = new Filesystem();
-        $fs->remove(static::$tmpDir);
+        $fs->remove(self::$tmpDir);
     }
 }

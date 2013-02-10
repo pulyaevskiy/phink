@@ -20,9 +20,14 @@ use Phink\Object;
 class ObjectTest extends TestCase
 {
 
+    protected function getExampleData()
+    {
+        return '100644 blob fd1aa0effc88d9e37e356c0150f7e1f64a16d2ae	composer.json';
+    }
+
     public function testDataParsedCorrectly()
     {
-        $data = '100644 blob fd1aa0effc88d9e37e356c0150f7e1f64a16d2ae	composer.json';
+        $data = $this->getExampleData();
         $object = new Object($data, static::$tmpDir);
         $this->assertEquals('100644', $object->getMode());
         $this->assertEquals('blob', $object->getType());

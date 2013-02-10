@@ -7,35 +7,48 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class RepositoryTest extends TestCase
 {
+
+    protected function getRepository($name)
+    {
+        $cwd = self::$tmpDir . '/' . $name;
+        if (!file_exists($cwd)) {
+            $fs = new Filesystem();
+            $fs->mkdir($cwd);
+        }
+        return new Repository($cwd);
+    }
+
+    protected function makeRepositoryDirty(Repository $repository)
+    {
+        $fs = new Filesystem();
+        $filename = self::generateUniqueString() . '.php';
+        $filepath = $repository->getCwd() . '/' . $filename;
+        $fs->touch($filepath);
+        return $filename;
+    }
+
     public function testInit()
     {
-        $cwd = static::$tmpDir .'/repositorytest';
-        $fs = new Filesystem();
-        $fs->mkdir($cwd);
-        $repo = new Repository($cwd);
-        $this->assertFalse($repo::exists($cwd));
+        $repo = $this->getRepository('test');
+        $this->assertFalse(Repository::exists($repo->getCwd()));
         $repo->init();
-        $this->assertTrue($repo::exists($cwd), 'Repository wasn\'t created');
-        return $cwd;
+        $this->assertTrue(Repository::exists($repo->getCwd()), 'Repository wasn\'t created');
     }
 
     public function testCloneExisting()
     {
-        $cwd = static::$tmpDir .'/clonetest';
-        $fs = new Filesystem();
-        $fs->mkdir($cwd);
-        $repo = new Repository($cwd);
+        $repo = $this->getRepository('clonetest');
         $repo->cloneExisting('git://github.com/pulyaevsky/phink.git');
-        $this->assertTrue($fs->exists($cwd .'/.git'));
-        return $repo;
+        $this->assertTrue(Repository::exists($repo->getCwd()));
     }
 
     /**
      * @depends testCloneExisting
      * @expectedException \Phink\Exception
      */
-    public function testCloneInNonEmptyDir(Repository $repo)
+    public function testCloneInNonEmptyDir()
     {
+        $repo = $this->getRepository('clonetest');
         $repo->cloneExisting('git://github.com/pulyaevsky/phink.git');
     }
 
@@ -44,85 +57,67 @@ class RepositoryTest extends TestCase
      */
     public function testInitForUnexistedDir()
     {
-        new Repository(static::$tmpDir .'/somedir', true);
+        new Repository(static::$tmpDir .'/notexists', true);
     }
 
-    /**
-     * @depends testInit
-     */
-    public function testIsDirty($cwd)
+    public function testIsDirty()
     {
-        $repo = new Repository($cwd);
+        $repo = $this->getRepository('dirtytest');
+        $repo->init();
         $this->assertFalse($repo->isDirty());
-        $fs = new Filesystem();
-        $fs->touch($cwd . '/file1.php');
+        $this->makeRepositoryDirty($repo);
         $this->assertTrue($repo->isDirty());
-        return $cwd;
     }
 
-    /**
-     * @depends testIsDirty
-     */
-    public function testGetUnstagedChanges($cwd)
+    public function testGetUnstagedChanges()
     {
-        $repo = new Repository($cwd);
+        $repo = $this->getRepository('unstagedtest');
+        $repo->init();
+        $filename = $this->makeRepositoryDirty($repo);
         $list = $repo->getUnstagedChanges();
-        $this->assertEquals(array('file1.php'), $list, 'Unstaged changes doesn\'t match.');
-        return $cwd;
+        $this->assertEquals(array($filename), $list, 'Unstaged changes doesn\'t match.');
     }
 
-    /**
-     * @depends testGetUnstagedChanges
-     */
-    public function testGetStagedChangesEmpty($cwd)
+    public function testGetStagedChangesEmpty()
     {
-        $repo = new Repository($cwd);
+        $repo = $this->getRepository('stagedtest');
+        $repo->init();
         $list = $repo->getStagedChanges();
         $this->assertEquals(array(), $list, 'List of staged files must be empty.');
-        return $cwd;
     }
 
-    /**
-     * @depends testGetStagedChangesEmpty
-     */
-    public function testAddFile($cwd)
+    public function testAddFile()
     {
-        $repo = new Repository($cwd);
-        $repo->add('file1.php');
+        $repo = $this->getRepository('addtest');
+        $repo->init();
+        $filename = $this->makeRepositoryDirty($repo);
+        $repo->add($filename);
         $list = $repo->getStagedChanges();
-        $this->assertEquals(array('file1.php'), $list);
-        return $cwd;
+        $this->assertEquals(array($filename), $list);
     }
 
-    /**
-     * @depends testAddFile
-     */
-    public function testAddAllFiles($cwd)
+    public function testAddAllFiles()
     {
-        $repo = new Repository($cwd);
-        $fs = new Filesystem();
-        $fs->touch($cwd . '/file2.php');
-        $fs->mkdir($cwd . '/asubdir');
-        $fs->touch($cwd . '/asubdir/file3.php');
-        $list = $repo->getUnstagedChanges();
-        // Files and directories are ordered alphabetically
-        $this->assertEquals(array('asubdir/', 'file2.php'), $list);
+        $repo = $this->getRepository('addalltest');
+        $repo->init();
+        $filename1 = $this->makeRepositoryDirty($repo);
+        $filename2 = $this->makeRepositoryDirty($repo);
+        $expected = array($filename1, $filename2);
+        sort($expected);
         $repo->add();
         $list = $repo->getStagedChanges();
-        $this->assertEquals(array('asubdir/file3.php', 'file1.php', 'file2.php'), $list);
-        return $cwd;
+        $this->assertEquals($expected, $list);
     }
 
-    /**
-     * @depends testAddAllFiles
-     */
-    public function testCommit($cwd)
+
+    public function testCommit()
     {
-        $repo = new Repository($cwd);
+        $repo = $this->getRepository('committest');
+        $repo->init();
+        $this->makeRepositoryDirty($repo);
+        $repo->add();
         $repo->commit('Added new files');
         // Staged changes must be empty after successful commit
         $this->assertEquals(array(), $repo->getStagedChanges());
-        return $cwd;
     }
 }
-

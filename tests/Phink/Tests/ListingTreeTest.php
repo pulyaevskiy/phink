@@ -50,9 +50,8 @@ class ListingTreeTest extends TestCase
             'cde.php' => 'blob',
         );
         reset($expected);
-        /**
-         * @var Object $object
-         */
+
+        /** @var Object $object */
         foreach ($ls as $object) {
             $this->assertEquals(key($expected), $object->getName());
             $this->assertEquals(current($expected), $object->getType());
@@ -68,9 +67,8 @@ class ListingTreeTest extends TestCase
             'abc.php' => 'blob',
         );
         reset($expected);
-        /**
-         * @var Object $object
-         */
+        
+        /** @var Object $object */
         foreach ($ls as $object) {
             $this->assertEquals(key($expected), $object->getName());
             $this->assertEquals(current($expected), $object->getType());

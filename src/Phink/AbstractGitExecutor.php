@@ -38,4 +38,10 @@ abstract class AbstractGitExecutor
 
         return $process->getOutput();
     }
+
+    public function getCwd()
+    {
+        return $this->cwd;
+    }
+
 }

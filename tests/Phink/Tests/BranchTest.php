@@ -11,7 +11,6 @@
 namespace Phink\Tests;
 
 use Phink\Branch;
-use Phink\AbstractGitExecutor;
 use Phink\Repository;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -39,61 +38,53 @@ class BranchTest extends TestCase
         $repo->commit('Initial commit');
     }
 
-    public function testGetList()
+    protected function getBranch()
     {
-        $branch = new Branch(self::$repoDir);
-        $list = $branch->getList();
-        $this->assertEquals(array('master'), $list, 'There must be only master branch.');
-        return $branch;
+        return new Branch(self::$repoDir);
     }
 
-    /**
-     * @depends testGetList
-     */
-    public function testCreate(Branch $branch)
+    public function testGetList()
     {
+        $branch = $this->getBranch();
+        $list = $branch->getList();
+        $this->assertEquals(array('master'), $list, 'There must be only master branch.');
+    }
+
+    public function testCreate()
+    {
+        $branch = $this->getBranch();
         $branch->create('staging');
         $list = $branch->getList();
         $this->assertEquals(array('master', 'staging'), $list);
-        return $branch;
     }
 
     /**
-     * @depends testCreate
      * @expectedException \Phink\Exception
      */
-    public function testExistingNotCreated(Branch $branch)
+    public function testExistingNotCreated()
     {
-        $branch->create('staging');
+        $this->getBranch()->create('staging');
     }
 
-    /**
-     * @depends testCreate
-     */
-    public function testGetCurrent(Branch $branch)
+    public function testGetCurrent()
     {
-        $current = $branch->getCurrent();
+        $current = $this->getBranch()->getCurrent();
         $this->assertEquals('master', $current, 'Current branch doesn\'t match. Must be \'master\'.');
-        return $branch;
     }
 
-    /**
-     * @depends testGetCurrent
-     */
-    public function testSetCurrent(Branch $branch)
+    public function testSetCurrent()
     {
+        $branch = $this->getBranch();
         $branch->setCurrent('staging');
         $this->assertEquals('staging', $branch->getCurrent(), 'Current branch doesn\'t match. Must be \'staging\'.');
-        return $branch;
     }
 
     /**
-     * @depends testSetCurrent
      * @expectedException \Phink\Exception
      */
-    public function testSetCurrentNotExisting(Branch $branch)
+    public function testSetCurrentNotExisting()
     {
-        $branch->setCurrent('not_exists');
+        $this->getBranch()->setCurrent('not_exists');
     }
 
 }

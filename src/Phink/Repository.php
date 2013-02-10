@@ -31,7 +31,6 @@ class Repository extends AbstractGitExecutor
         }
     }
 
-
     /**
      * Checks if Git repository exists in specified $path.
      *
