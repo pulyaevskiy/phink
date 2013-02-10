@@ -60,7 +60,7 @@ class GitProcess extends Process
     public function run($callback = null)
     {
         if (null === $this->getCommandLine()) {
-            if (false === $git = $this->executableFinder->find('git')) {
+            if (false == $git = $this->executableFinder->find('git')) {
                 throw new RuntimeException('Unable to find the Git executable.');
             }
             $this->setCommandLine("$git {$this->command}");
