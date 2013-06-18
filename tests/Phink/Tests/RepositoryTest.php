@@ -2,6 +2,7 @@
 
 namespace Phink\Tests;
 
+use Phink\Branch;
 use Phink\Repository;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -119,5 +120,20 @@ class RepositoryTest extends TestCase
         $repo->commit('Added new files');
         // Staged changes must be empty after successful commit
         $this->assertEquals(array(), $repo->getStagedChanges());
+    }
+
+    public function testCheckout()
+    {
+        $repo = $this->getRepository('checkouttest');
+        $repo->init();
+        $this->makeRepositoryDirty($repo);
+        $repo->add();
+        $repo->commit('Initial commit');
+        $branch = new Branch($repo->getCwd());
+        $branch->create('staging');
+
+        $this->assertEquals('master', $branch->getCurrent());
+        $repo->checkout('staging');
+        $this->assertEquals('staging', $branch->getCurrent());
     }
 }

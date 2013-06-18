@@ -121,4 +121,14 @@ class Repository extends AbstractGitExecutor
     {
         $this->exec("commit -m \"$message\"");
     }
+
+    /**
+     * Performs "git checkout" command.
+     *
+     * @param string $path Can be name of branch, tag, or commit
+     */
+    public function checkout($path)
+    {
+        $this->exec("checkout $path");
+    }
 }
