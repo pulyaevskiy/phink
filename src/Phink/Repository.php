@@ -12,6 +12,7 @@
 namespace Phink;
 
 use Phink\Command\CheckoutCommand;
+use Phink\Command\InitCommand;
 use Phink\Command\PullCommand;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -29,7 +30,7 @@ class Repository extends AbstractGitExecutor
     {
         parent::__construct($cwd);
         if ($init) {
-            $this->init();
+            $this->init()->execute();
         }
     }
 
@@ -47,15 +48,17 @@ class Repository extends AbstractGitExecutor
 
     /**
      * Initializes Git repository.
+     *
+     * @return InitCommand
      */
     public function init()
     {
         // Do not allow init commands for not existing directories.
         $fs = new Filesystem();
-        if (!$fs->exists($this->cwd)) {
+        if (!$fs->exists($this->getCwd())) {
             throw new Exception("Directory '{$this->cwd}' doesn't exists.");
         }
-        $this->exec('init');
+        return new InitCommand($this->getCwd());
     }
 
     /**

@@ -41,7 +41,7 @@ class RepositoryTest extends TestCase
     {
         $repo = $this->getRepository('test');
         $this->assertFalse(Repository::exists($repo->getCwd()));
-        $repo->init();
+        $repo->init()->execute();
         $this->assertTrue(Repository::exists($repo->getCwd()), 'Repository wasn\'t created');
     }
 
@@ -74,7 +74,7 @@ class RepositoryTest extends TestCase
     public function testIsDirty()
     {
         $repo = $this->getRepository('dirtytest');
-        $repo->init();
+        $repo->init()->execute();
         $this->assertFalse($repo->isDirty());
         $this->makeRepositoryDirty($repo);
         $this->assertTrue($repo->isDirty());
@@ -83,7 +83,7 @@ class RepositoryTest extends TestCase
     public function testGetUnstagedChanges()
     {
         $repo = $this->getRepository('unstagedtest');
-        $repo->init();
+        $repo->init()->execute();
         $filename = $this->makeRepositoryDirty($repo);
         $list = $repo->getUnstagedChanges();
         $this->assertEquals(array($filename), $list, 'Unstaged changes doesn\'t match.');
@@ -92,7 +92,7 @@ class RepositoryTest extends TestCase
     public function testGetStagedChangesEmpty()
     {
         $repo = $this->getRepository('stagedtest');
-        $repo->init();
+        $repo->init()->execute();
         $list = $repo->getStagedChanges();
         $this->assertEquals(array(), $list, 'List of staged files must be empty.');
     }
@@ -100,7 +100,7 @@ class RepositoryTest extends TestCase
     public function testAddFile()
     {
         $repo = $this->getRepository('addtest');
-        $repo->init();
+        $repo->init()->execute();
         $filename = $this->makeRepositoryDirty($repo);
         $repo->add($filename);
         $list = $repo->getStagedChanges();
@@ -110,7 +110,7 @@ class RepositoryTest extends TestCase
     public function testAddAllFiles()
     {
         $repo = $this->getRepository('addalltest');
-        $repo->init();
+        $repo->init()->execute();
         $filename1 = $this->makeRepositoryDirty($repo);
         $filename2 = $this->makeRepositoryDirty($repo);
         $expected = array($filename1, $filename2);
@@ -124,7 +124,7 @@ class RepositoryTest extends TestCase
     public function testCommit()
     {
         $repo = $this->getRepository('committest');
-        $repo->init();
+        $repo->init()->execute();
         $this->makeRepositoryDirty($repo);
         $repo->add();
         $repo->commit('Added new files');

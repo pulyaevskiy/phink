@@ -32,6 +32,22 @@ class InitCommand extends AbstractCommand {
     {
         $command = 'init';
 
+        if ($this->quiet) {
+            $command .= ' --quiet';
+        }
+
+        if ($this->bare) {
+            $command .= ' --bare';
+        }
+
+        if ($this->templateDirectory) {
+            $command .= " --template='$this->templateDirectory'";
+        }
+
+        if ($this->directory) {
+            $command .= " $this->directory";
+        }
+
         return $command;
     }
 
