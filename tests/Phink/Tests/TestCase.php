@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Phink library.
+ *
+ * (c) Anatoly Pulyaevsky <anatoly@abstractionpower.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Phink\Tests;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -38,8 +47,8 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $cmd = __DIR__ . '/Fixtures/create_test_repository.sh';
         $process = new Process($cmd, $cwd);
         $process->run();
-        if ($process->isSuccessful()) {
-            throw new \RuntimeException("Unable to create test repository.");
+        if (!$process->isSuccessful()) {
+            throw new \RuntimeException("Unable to create test repository: ". $process->getErrorOutput());
         }
         return $cwd;
     }

@@ -12,6 +12,7 @@
 namespace Phink;
 
 use Phink\Command\CheckoutCommand;
+use Phink\Command\PullCommand;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -131,5 +132,15 @@ class Repository extends AbstractGitExecutor
     public function checkout()
     {
         return new CheckoutCommand($this->getCwd());
+    }
+
+    /**
+     * Returns instance of Pull command associated with this repository which must be used to perform actual 'git pull'.
+     *
+     * @return PullCommand
+     */
+    public function pull()
+    {
+        return new PullCommand($this->getCwd());
     }
 }

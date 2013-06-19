@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Phink library.
+ *
+ * (c) Anatoly Pulyaevsky <anatoly@abstractionpower.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Phink\Tests;
 
 use Phink\Branch;
@@ -38,8 +47,9 @@ class RepositoryTest extends TestCase
 
     public function testCloneExisting()
     {
+        $existingRepositoryPath = self::createTestRepository('existing');
         $repo = $this->getRepository('clonetest');
-        $repo->cloneExisting('git://github.com/pulyaevsky/phink.git');
+        $repo->cloneExisting($existingRepositoryPath);
         $this->assertTrue(Repository::exists($repo->getCwd()));
     }
 
@@ -127,5 +137,11 @@ class RepositoryTest extends TestCase
         $repo = $this->getRepository('checkouttest');
         $result = $repo->checkout();
         $this->assertInstanceOf('\Phink\Command\CheckoutCommand', $result);
+    }
+
+    public function testPull()
+    {
+        $repo = $this->getRepository('pulltest');
+        $this->assertInstanceOf('\Phink\Command\PullCommand', $repo->pull());
     }
 }
