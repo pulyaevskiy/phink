@@ -3,6 +3,7 @@
 namespace Phink\Tests;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\Process;
 
 class TestCase extends \PHPUnit_Framework_TestCase
 {
@@ -21,6 +22,26 @@ class TestCase extends \PHPUnit_Framework_TestCase
         if (!is_writable(self::$tmpDir)) {
             self::markTestSkipped('There is no write permission in order to create repositories');
         }
+    }
+
+    public static function createTestRepository($name)
+    {
+        $cwd = self::$tmpDir . '/' . $name;
+
+        $fs = new Filesystem();
+        if ($fs->exists($cwd)) {
+            $fs->remove($cwd);
+        }
+
+        $fs->mkdir($cwd);
+
+        $cmd = __DIR__ . '/Fixtures/create_test_repository.sh';
+        $process = new Process($cmd, $cwd);
+        $process->run();
+        if ($process->isSuccessful()) {
+            throw new \RuntimeException("Unable to create test repository.");
+        }
+        return $cwd;
     }
 
     public static function tearDownAfterClass()

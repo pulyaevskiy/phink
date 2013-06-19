@@ -125,15 +125,7 @@ class RepositoryTest extends TestCase
     public function testCheckout()
     {
         $repo = $this->getRepository('checkouttest');
-        $repo->init();
-        $this->makeRepositoryDirty($repo);
-        $repo->add();
-        $repo->commit('Initial commit');
-        $branch = new Branch($repo->getCwd());
-        $branch->create('staging');
-
-        $this->assertEquals('master', $branch->getCurrent());
-        $repo->checkout('staging');
-        $this->assertEquals('staging', $branch->getCurrent());
+        $result = $repo->checkout();
+        $this->assertInstanceOf('\Phink\Command\CheckoutCommand', $result);
     }
 }

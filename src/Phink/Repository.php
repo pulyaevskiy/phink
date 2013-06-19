@@ -11,6 +11,7 @@
 
 namespace Phink;
 
+use Phink\Command\CheckoutCommand;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -123,12 +124,12 @@ class Repository extends AbstractGitExecutor
     }
 
     /**
-     * Performs "git checkout" command.
+     * Returns instance of Checkout command.
      *
-     * @param string $path Can be name of branch, tag, or commit
+     * @return CheckoutCommand
      */
-    public function checkout($path)
+    public function checkout()
     {
-        $this->exec("checkout $path");
+        return new CheckoutCommand($this->getCwd());
     }
 }
