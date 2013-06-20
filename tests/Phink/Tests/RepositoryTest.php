@@ -11,7 +11,6 @@
 
 namespace Phink\Tests;
 
-use Phink\Branch;
 use Phink\Repository;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -102,7 +101,9 @@ class RepositoryTest extends TestCase
         $repo = $this->getRepository('addtest');
         $repo->init()->execute();
         $filename = $this->makeRepositoryDirty($repo);
-        $repo->add($filename);
+        $repo->add()
+            ->filePattern($filename)
+            ->execute();
         $list = $repo->getStagedChanges();
         $this->assertEquals(array($filename), $list);
     }
@@ -115,7 +116,9 @@ class RepositoryTest extends TestCase
         $filename2 = $this->makeRepositoryDirty($repo);
         $expected = array($filename1, $filename2);
         sort($expected);
-        $repo->add();
+        $repo->add()
+            ->filePattern('.')
+            ->execute();
         $list = $repo->getStagedChanges();
         $this->assertEquals($expected, $list);
     }
@@ -126,7 +129,9 @@ class RepositoryTest extends TestCase
         $repo = $this->getRepository('committest');
         $repo->init()->execute();
         $this->makeRepositoryDirty($repo);
-        $repo->add();
+        $repo->add()
+            ->filePattern('.')
+            ->execute();
         $repo->commit('Added new files');
         // Staged changes must be empty after successful commit
         $this->assertEquals(array(), $repo->getStagedChanges());

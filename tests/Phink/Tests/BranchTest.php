@@ -35,7 +35,9 @@ class BranchTest extends TestCase
 
         // Create master branch for tests
         $fs->touch(self::$repoDir .'/file1.php');
-        $repo->add();
+        $repo->add()
+            ->filePattern('.')
+            ->execute();
         $repo->commit('Initial commit');
     }
 

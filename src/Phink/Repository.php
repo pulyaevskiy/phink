@@ -11,6 +11,7 @@
 
 namespace Phink;
 
+use Phink\Command\AddCommand;
 use Phink\Command\CheckoutCommand;
 use Phink\Command\InitCommand;
 use Phink\Command\PullCommand;
@@ -83,12 +84,11 @@ class Repository extends AbstractGitExecutor
     /**
      * Stages changed files.
      *
-     * @param string $file
-     * @return mixed
+     * @return AddCommand
      */
-    public function add($file = '.')
+    public function add()
     {
-        return $this->exec("add $file");
+        return new AddCommand($this->getCwd());
     }
 
     /**

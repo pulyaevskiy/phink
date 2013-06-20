@@ -38,7 +38,9 @@ class ListingTreeTest extends TestCase
         $fs->mkdir(static::$repoPath . '/bcd');
         $fs->touch(static::$repoPath . '/bcd/abc.php');
         $fs->touch(static::$repoPath . '/bcd/5bc.php');
-        $repo->add();
+        $repo->add()
+            ->filePattern('.')
+            ->execute();
         $repo->commit('Initial commit');
     }
 
