@@ -15,6 +15,7 @@ use Phink\Command\AddCommand;
 use Phink\Command\CheckoutCommand;
 use Phink\Command\InitCommand;
 use Phink\Command\PullCommand;
+use Phink\Command\StatusCommand;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -89,6 +90,14 @@ class Repository extends AbstractGitExecutor
     public function add()
     {
         return new AddCommand($this->getCwd());
+    }
+
+    /**
+     * @return StatusCommand
+     */
+    public function status()
+    {
+        return new StatusCommand($this->getCwd());
     }
 
     /**
