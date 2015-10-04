@@ -1,12 +1,12 @@
 Phink
 =====
 
+*There will be no further development of this library. But I'll keep this repository for history's sake and maybe someone else who'd find it interesting to continue this work.*
+
 Phink is a PHP library intended to help developers when working with Git from PHP.
 
 The Phink has started as private project and currently is in early development stage so it doesn't do much. 
 However there is a bunch of already implemented git commands like: init, clone, add, checkout, pull.
-
-More to be added soon.
 
 Usage
 =====
